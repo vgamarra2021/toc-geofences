@@ -1,9 +1,9 @@
 import Map from "ol/Map.js";
 import View from "ol/View.js";
-import Draw from "ol/interaction/Draw.js";
+import Draw, { createRegularPolygon } from "ol/interaction/Draw.js";
 import TileLayer from "ol/layer/Tile.js";
 import VectorLayer from "ol/layer/Vector.js";
-import { transform } from "ol/proj";
+import { fromLonLat, transform } from "ol/proj";
 import { TileJSON } from "ol/source";
 import OSM from "ol/source/OSM.js";
 import VectorSource from "ol/source/Vector.js";
@@ -31,10 +31,14 @@ function addFinishLogic() {
   draw.on("drawend", (event) => {
     const geometry = event.feature.getGeometry();
     let area;
-    if (draw.type_ === "Circle") {
+    if (typeSelect.value === "Circle") {
       area = formatCircleGeometry(geometry);
-    } else if (draw.type_ === "Polygon") {
+    } else if (typeSelect.value === "Polygon") {
       area = formatPolygonGeometry(geometry);
+    } else if (typeSelect.value === "Square") {
+      area = `SQUARE(${ geometry.getCoordinates()})`;
+    } else {
+      area = geometry.getCoordinates();
     }
     resultTxt.innerHTML = area;
 
@@ -74,7 +78,7 @@ const map = new Map({
   ],
   target: "map",
   view: new View({
-    center: [-11000000, 4600000],
+    center: fromLonLat([-102.329426, 22.574874]),
     zoom: 4,
   }),
 });
@@ -84,10 +88,17 @@ function addInteraction() {
 }
 
 typeSelect.onchange = function () {
+  let geometryFunction;
+  let type = typeSelect.value;
+  if (typeSelect.value === "Square") {
+    type = "Circle";
+    geometryFunction = createRegularPolygon(4);
+  }
   map.removeInteraction(draw);
   draw = new Draw({
     source: source,
-    type: typeSelect.value,
+    type,
+    geometryFunction,
   });
   addFinishLogic();
   addInteraction();

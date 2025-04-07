@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Draw Shapes</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css"
+    />
+    <link rel="stylesheet" href="node_modules/ol/ol.css" />
+    <style>
+      .map {
+        width: 100%;
+        height: 600px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="map" class="map"></div>
+    <div class="d-flex flex-column gap-2 justify-content-center mx-auto" style="max-width: 500px;">
+      <div class="d-flex justify-content-center mt-4">
+        <span class="input-group">
+          <label class="input-group-text" for="type">Shape type:</label>
+          <select class="form-select" id="type">
+            <option value="Polygon">Polygon</option>
+            <option value="Circle">Circle</option>
+          </select>
+        </span>
+      </div>
+      <textarea
+        rows="5"
+        id="result"
+        class="form-control"
+        readonly
+      ></textarea>
+    </div>
+
+    <script type="module" src="main.js"></script>
+  </body>
+</html>
